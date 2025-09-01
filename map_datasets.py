@@ -1,16 +1,14 @@
-#%%
-import os
 import subprocess
 import logging
 import shutil
 from pathlib import Path
+
 from enrich_eps_datasets import get_enriched_eps_datasets
 
 # Configure logging to show info messages
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-#%%
 def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
     """
     Map a Pennsieve dataset to a local directory.
@@ -24,7 +22,7 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
         bool: True if mapping was successful, False otherwise
     """
     # Create the full path for the dataset directory
-    dataset_path = Path.cwd() / base_data_dir / dataset_name
+    dataset_path = Path.cwd() / base_data_dir / "pennsieve" / dataset_name
     
     try:
         # Check if dataset directory already exists and remove it
@@ -58,13 +56,9 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
         logger.error(f"Error mapping '{dataset_name}': {e}")
         return False
 
-#%%
+# %%
 if __name__ == "__main__":
     eps_datasets = get_enriched_eps_datasets()
     
-    # for dataset in eps_datasets:
-    #     map_dataset(dataset['id'], dataset['name'])
-
-    
-
-# %%
+    for dataset in eps_datasets:
+        map_dataset(dataset['id'], dataset['name'])

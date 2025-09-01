@@ -130,7 +130,7 @@ def prepare_rid_hupid_data(sheets_client):
     Returns:
         DataFrame: Cleaned RID-HupID mapping data
     """
-    log.info("Loading RID-HupID mapping from Google Sheets...")
+    log.info("Loading RID-hupid_mapping from Google Sheets...")
     
     # Load the raw data
     rid_hupid = sheets_client.read_rid_hupid_sheet()
@@ -143,5 +143,5 @@ def prepare_rid_hupid_data(sheets_client):
     # Example: 123 becomes 'sub-RID0123'
     rid_hupid['record_id'] = 'sub-RID' + rid_hupid['record_id'].astype(str).str.zfill(4)
     
-    log.info(f"Loaded and cleaned RID-HupID mapping with {len(rid_hupid)} rows")
+    log.info(f"Loaded and cleaned RID-hupid_mapping with {len(rid_hupid)} rows")
     return rid_hupid 

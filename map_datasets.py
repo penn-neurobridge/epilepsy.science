@@ -1,3 +1,4 @@
+#%%
 import subprocess
 import logging
 import shutil
@@ -9,6 +10,7 @@ from enrich_eps_datasets import get_enriched_eps_datasets
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+#%%
 def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
     """
     Map a Pennsieve dataset to a local directory.
@@ -33,6 +35,7 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
         data_dir = Path.cwd() / base_data_dir
         data_dir.mkdir(exist_ok=True)
         
+        logger.info(f"Mapping '{dataset_name}' to {dataset_path}")
         # Run the pennsieve map command
         result = subprocess.run([
             'pennsieve', 
@@ -40,8 +43,7 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
             dataset_id, 
             str(dataset_path)
         ], capture_output=True, text=True, check=True)
-        
-        logger.info(f"Mapped '{dataset_name}' to {dataset_path}")
+        logger.info(result.stdout)
         return True
         
     except subprocess.CalledProcessError as e:
@@ -61,4 +63,9 @@ if __name__ == "__main__":
     eps_datasets = get_enriched_eps_datasets()
     
     for dataset in eps_datasets:
-        map_dataset(dataset['id'], dataset['name'])
+        try:
+            if dataset['record_id'] in 'sub-RID0031':
+                map_dataset(dataset['id'], dataset['name'])
+        except:
+            pass
+# %%

@@ -64,7 +64,7 @@ def download_file_with_curl_backoff(url, output_path):
 
 def process_files_and_download(file_path, package_client):
     """
-    Process either a single file or all files in a directory and download them.
+    Process either a single file or all files recursively in a directory and download them.
     
     Args:
         file_path (str or Path): Path to a file or directory containing package IDs
@@ -186,7 +186,7 @@ if __name__ == "__main__":
     package_client = setup_pennsieve_clients()
     
     # Define the path to process (can be a file or directory)
-    input_path = '/Users/nishant/Dropbox/Sinha/Lab/Research/epilepsy_science_curate/data/pennsieve/EPS0000128'
+    input_path = '/Users/nishant/Dropbox/Sinha/Lab/Research/epilepsy_science_curate/data/pennsieve/EPS0000049'
     
     # Process the files and download them
     process_files_and_download(input_path, package_client)

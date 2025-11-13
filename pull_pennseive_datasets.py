@@ -3,6 +3,7 @@ import logging
 import backoff
 import subprocess
 import json
+import typer
 
 from pathlib import Path
 from config import Config
@@ -179,16 +180,17 @@ def load_valid_package_ids(manifest_path):
     except Exception as e:
         log.error(f"Error reading manifest file {manifest_path}: {str(e)}")
         return set()
-
-#%%
-if __name__ == "__main__":
-    # Set up the Pennsieve client
+    
+def main(input_path: str = typer.Option(..., "--input-path", "-i", help="The path to the directory or file containing package IDs in mapped Pennsieve datasets")):
+    """
+    Main function to process and download files from Pennsieve.
+    
+    Args:
+        input_path (str): Path to the directory or file containing package IDs
+    """
     package_client = setup_pennsieve_clients()
-    
-    # Define the path to process (can be a file or directory)
-    input_path = '/Users/nishant/Dropbox/Sinha/Lab/Research/epilepsy_science_curate/data/pennsieve/EPS0000049'
-    
-    # Process the files and download them
     process_files_and_download(input_path, package_client)
 
 #%%
+if __name__ == "__main__":
+    typer.run(main)

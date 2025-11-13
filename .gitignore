@@ -44,6 +44,7 @@ Thumbs.db
 .env.local
 pennsieve.env
 utils.env
+config.ini
 
 # Data
 data/

@@ -10,10 +10,10 @@ pennsieve whoami
 # uv run get_pennseive_datasets.py
 
 # Map the specific datasets to local
-# uv run map_pennseive_datasets.py --base-data-dir /app/data --dataset-name "PennEPI00049,PennEPI00001"
+uv run map_pennseive_datasets.py --base-data-dir /app/data --dataset-name "PennEPI00143,PennEPI00049" 
 
 # Pull the specific files or directories
-# uv run pull_pennseive_datasets.py -i "/app/data/output/PennEPI00049/dataset_description.json"
+uv run pull_pennseive_datasets.py -i "/app/data/output/PennEPI00143/archive"
 # uv run pull_pennseive_datasets.py -i "/app/data/output/PennEPI00049/participants.tsv"
 # uv run pull_pennseive_datasets.py -i "/app/data/output/PennEPI00049/participants.json"
 # uv run pull_pennseive_datasets.py -i "/app/data/output/PennEPI00049/derivatives"
@@ -23,4 +23,4 @@ pennsieve whoami
 
 
 # Diff specific datasets
-uv run diff_pennseive_datasets.py --dataset-name "PennEPI00049" --base-data-dir /app/data
+uv run diff_pennseive_datasets.py --dataset-name "PennEPI00143" --base-data-dir /app/data

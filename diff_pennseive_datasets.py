@@ -172,19 +172,5 @@ def main(
     return df
 # %%
 if __name__ == "__main__":
-    # Set this to True for testing with hard-coded values
-    # Set to False to use command-line arguments
-    USE_HARDCODED_VALUES = True
-    
-    if USE_HARDCODED_VALUES:
-        # Direct function call for testing
-        df = main(
-            dataset_name="PennEPI00143", 
-            base_data_dir=str(Path.cwd() / "data"), 
-            output_csv=str(Path.cwd() / "data" / "diff_pennseive_datasets.csv")
-        )
-        if df is not None:
-            log.info(f"\nResults:\n{df}")
-    else:
-        # Use typer for command-line arguments
-        typer.run(main)
+    # Use typer for command-line arguments
+    typer.run(main)

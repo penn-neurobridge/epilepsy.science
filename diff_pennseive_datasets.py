@@ -179,7 +179,7 @@ if __name__ == "__main__":
     if USE_HARDCODED_VALUES:
         # Direct function call for testing
         df = main(
-            dataset_name="PennEPI00049", 
+            dataset_name="PennEPI00143", 
             base_data_dir=str(Path.cwd() / "data"), 
             output_csv=str(Path.cwd() / "data" / "diff_pennseive_datasets.csv")
         )

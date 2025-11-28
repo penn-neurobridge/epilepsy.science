@@ -1,4 +1,4 @@
-FROM pennsieve/pennsieve-agent:1.8.7 AS pennsieve
+FROM pennsieve/pennsieve-agent:1.8.10 AS pennsieve
 FROM ghcr.io/astral-sh/uv:python3.13-alpine
 
 # Install system dependencies
@@ -10,7 +10,8 @@ RUN apk add --no-cache \
     python3-dev \
     musl-dev \
     linux-headers \
-    build-base
+    build-base \
+    rsync
 
 # Copy Pennsieve binary from official image
 COPY --from=pennsieve /root/pennsieve /usr/local/bin/

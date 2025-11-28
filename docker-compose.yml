@@ -8,6 +8,7 @@ services:
     image: neuronova/epilepsy-science:latest
     volumes:
       - ./data:/app/data
+      - /Users/nishant/Dropbox/Sinha/Lab/Research/projects/discover/epilepsy/epi_t3_iEEG/data/BIDS:/app/data/BIDS
     container_name: epilepsy-science
     build:
       context: .

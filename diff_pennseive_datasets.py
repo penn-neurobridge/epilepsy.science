@@ -140,7 +140,7 @@ def diff_dataset(dataset_name, base_data_dir="data"):
 # %%
 def main(
     base_data_dir: str = typer.Option("data", help="The directory where the datasets are mapped"),
-    dataset_name: str = typer.Argument(..., help="The name of the dataset to diff"),
+    dataset_name: str = typer.Option(..., help="The name of the dataset to diff"),
     output_csv: str = typer.Option(None, "--output-csv", "-o", help="Optional: Save results to CSV file")
 ):
     """

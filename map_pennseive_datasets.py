@@ -1,7 +1,6 @@
 #%%
 import subprocess
 import logging
-import shutil
 import typer
 import get_pennseive_datasets as pennseive
 
@@ -29,9 +28,10 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
     dataset_path = Path(base_data_dir) / "output" / dataset_name
     
     try:
-        # Check if dataset directory already exists and remove it
+        # Check if dataset directory already exists - if so, skip
         if dataset_path.exists():
-            shutil.rmtree(dataset_path)
+            log.info(f"Dataset '{dataset_name}' is already mapped at {dataset_path}, skipping...")
+            return True  # Return True since dataset is already there
         
         # Ensure the base data directory exists
         data_dir = Path(base_data_dir)

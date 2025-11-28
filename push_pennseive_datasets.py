@@ -90,8 +90,7 @@ def push_dataset(dataset_id, dataset_name, base_data_dir="data", upload_path=Non
             'dataset',
             'use',
             dataset_id
-        ], capture_output=True, text=True, check=True)
-        log.info(f"Active dataset set: {result.stdout.strip()}")
+        ], check=True)
         
         # Step 2: Get diff to identify ADDED files
         if diff_df is None:
@@ -182,6 +181,9 @@ def push_dataset(dataset_id, dataset_name, base_data_dir="data", upload_path=Non
         if first_target_path and str(first_target_path).strip():
             create_cmd.extend(['-t', str(first_target_path).strip()])
         
+        # log the create command
+        log.info(f"Create command: {create_cmd}")
+
         result = subprocess.run(create_cmd, capture_output=True, text=True, check=True)
         
         log.info(result.stdout)
@@ -300,6 +302,7 @@ def main(
     dataset_name: str = typer.Option("", "--dataset-name", "-n", help="The name(s) of the dataset(s) to push. Can be a single string or a comma-separated list."),
     upload_path: str = typer.Option(None, "--upload-path", "-p", help="Optional: Specific file or directory path within the dataset to upload"),
     dry_run: bool = typer.Option(False, "--dry-run", "-d", help="Show what would be uploaded without actually uploading")
+    # base_data_dir, dataset_name, upload_path=None, dry_run=False
 ):
     """
     Push ADDED files from mapped datasets to Pennsieve.
@@ -409,5 +412,8 @@ def main(
 # %%
 if __name__ == "__main__":
     typer.run(main)
-
+    # base_data_dir = "/Users/nishant/Dropbox/Sinha/Lab/Research/projects/develop/infrastructure/epilepsy_science_curate/data"
+    # dataset_name = "PennEPI00159"
+    # upload_path = None
+    # main(base_data_dir, dataset_name)
 # %%

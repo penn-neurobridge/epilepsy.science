@@ -1,4 +1,4 @@
-FROM pennsieve/pennsieve-agent:1.8.10 AS pennsieve
+FROM pennsieve/pennsieve-agent:1.8.7 AS pennsieve
 FROM ghcr.io/astral-sh/uv:python3.13-alpine
 
 # Install system dependencies

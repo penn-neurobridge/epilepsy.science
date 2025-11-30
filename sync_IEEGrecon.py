@@ -32,14 +32,14 @@ def rsync_ieeg_recon(source_dir: Path, target_dir: Path):
     target_ieeg_recon_dir = derivatives_dir / 'ieeg_recon'
 
     log.info(f"syncing to: {target_ieeg_recon_dir}")
-    cmd = ['rsync', '-av', '--progress', f"{ieeg_recon_dir}/", str(target_ieeg_recon_dir)]
+    cmd = ['rsync', '-av', '--progress', '--ignore-existing', '--exclude=.DS_Store', f"{ieeg_recon_dir}/", str(target_ieeg_recon_dir)]
     log.info(f"Running command: {' '.join(cmd)}")
     result = subprocess.run(cmd, check=True)
     return True
 
-def main(rid : str = typer.Option(...), pennepi : str = typer.Option(...)):
-    source_dir = Path('/app/data/BIDS') / rid
-    target_dir = Path(__file__).parent / "data" / "output" / pennepi
+def main(rid : str = typer.Option(...), pennepi : str = typer.Option(...), base_data_dir: str = typer.Option(...), bids_data_dir: str = typer.Option(...)):
+    source_dir = Path(bids_data_dir) / rid
+    target_dir = Path(base_data_dir) / "output" / pennepi
     log.info(f"Syncing ieeg_recon from: {source_dir} to: {target_dir}")
     rsync_ieeg_recon(source_dir=source_dir, target_dir=target_dir)
 

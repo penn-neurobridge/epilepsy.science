@@ -2,6 +2,7 @@
 import subprocess
 import logging
 import typer
+import shutil
 import get_pennseive_datasets as pennseive
 
 from pathlib import Path
@@ -12,7 +13,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 log = logging.getLogger(__name__)
 
 #%%
-def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
+def map_dataset(dataset_id, dataset_name, base_data_dir="data", remove_existing=False):
     """
     Map a Pennsieve dataset to a local directory.
     
@@ -28,10 +29,15 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
     dataset_path = Path(base_data_dir) / "output" / dataset_name
     
     try:
-        # Check if dataset directory already exists - if so, skip
-        if dataset_path.exists():
+        # Check if dataset directory already then delete it and remap it
+        if dataset_path.exists() and remove_existing:
+            log.info(f"Dataset '{dataset_name}' is already mapped at {dataset_path}, deleting and remapping...")
+            shutil.rmtree(dataset_path)
+        elif dataset_path.exists() and not remove_existing:
             log.info(f"Dataset '{dataset_name}' is already mapped at {dataset_path}, skipping...")
-            return True  # Return True since dataset is already there
+            return True
+        else:
+            log.info(f"Dataset '{dataset_name}' is not mapped, mapping at {dataset_path}")
         
         # Ensure the base data directory exists
         data_dir = Path(base_data_dir)
@@ -63,14 +69,16 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data"):
 # %%
 def main(
     base_data_dir: str = typer.Option("data", help="The directory where the datasets will be mapped"),
-    dataset_name: str = typer.Option("", "--dataset-name", "-n", help="The name(s) of the dataset(s) to map. Can be a single string or a comma-separated list.")
-):
+    dataset_name: str = typer.Option("", "--dataset-name", "-n", help="The name(s) of the dataset(s) to map. Can be a single string or a comma-separated list."),
+    remove_existing: bool = typer.Option(False, "--remove-existing", "-R", help="Remove existing dataset directory before mapping.")
+    ):
     """
     Map Pennsieve datasets to local directories.
     
     Args:
         base_data_dir: The directory where the datasets will be mapped
         dataset_name: The name(s) of the dataset(s) to map. Can be a single string or a comma-separated list.
+        remove_existing: Remove existing dataset directory before mapping.
     """
     # Get all PennEPI datasets
     pennepi_collection = pennseive.main()
@@ -98,7 +106,7 @@ def main(
     
     # Map each dataset in the collection
     for dataset in pennepi_collection:
-        map_dataset(dataset_id=dataset['id'], dataset_name=dataset['name'], base_data_dir=base_data_dir)
+        map_dataset(dataset_id=dataset['id'], dataset_name=dataset['name'], base_data_dir=base_data_dir, remove_existing=remove_existing)
 # %%
 if __name__ == "__main__":
     typer.run(main)

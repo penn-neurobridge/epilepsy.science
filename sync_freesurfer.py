@@ -72,10 +72,6 @@ FREESURFER_FILES = [
     "surf/rh.white",
 ]
 
-FREESURFER_DEFACE_FILES = [
-    "mri/T1.nii.gz"
-]
-
 #%%
 
 def rsync_freesurfer(source_dir: Path, target_dir: Path):
@@ -128,50 +124,11 @@ def rsync_freesurfer(source_dir: Path, target_dir: Path):
     result = subprocess.run(cmd, check=True)
     return True
 
-def deface_freesurferT1(source_dir: Path, target_dir: Path):
-    """
-    Deface the freesurfer T1 image.
-    
-    Args:
-        source_dir (Path): The source directory where the data is stored
-        target_dir (Path): The target directory where the data will be copied to
-    """
-    try:
-        freesurfer_T1_file = source_dir.rglob("freesurfer/mri/T1.nii.gz").__next__()
-        log.info(f"Found freesurfer T1 at: {freesurfer_T1_file}")
-    except StopIteration:
-        log.error(f"Could not find freesurfer T1 in {source_dir}")
-        return False
-    
-    target_freesurfer_T1_file = target_dir / 'derivatives' / 'freesurfer' / 'mri' / 'T1.nii.gz'
-    target_freesurfer_T1_file.mkdir(parents=True, exist_ok=True)
-
-    cmd = ['mideface', '--i', str(freesurfer_T1_file), '--o', str(target_freesurfer_T1_file)]
-    log.info(f"Running command: {' '.join(cmd)}")
-    result = subprocess.run(cmd, check=True)
-
-    # mri convert to nii.gz
-    target_freesurfer_T1_file_mgz = target_dir / 'derivatives' / 'freesurfer' / 'mri' / 'T1.mgz'
-    cmd = ['mri_convert', str(target_freesurfer_T1_file), str(target_freesurfer_T1_file_mgz)]
-    log.info(f"Running command: {' '.join(cmd)}")
-    result = subprocess.run(cmd, check=True)
-
-    # delete the mideface.log file
-    subprocess.run(['find', str(target_dir), '-name', '*mideface.log', '-type', 'f', '-delete'], check=True)
-
-    return True
-
 def main(rid : str = typer.Option(...), pennepi : str = typer.Option(...), base_data_dir: str = typer.Option(...), bids_data_dir: str = typer.Option(...)):
     source_dir = Path(bids_data_dir) / rid
     target_dir = Path(base_data_dir) / "output" / pennepi
     log.info(f"Syncing freesurfer from: {source_dir} to: {target_dir}")
     rsync_freesurfer(source_dir=source_dir, target_dir=target_dir)
-    # check if freesurfer T1 exists in the target directory
-    if not (target_dir / 'derivatives' / 'freesurfer' / 'mri' / 'T1.mgz').exists():
-        log.info(f"Defacing freesurfer T1 from: {source_dir} to: {target_dir}")
-        deface_freesurferT1(source_dir=source_dir, target_dir=target_dir)
-    else:
-        log.info(f"Freesurfer T1 already exists in {target_dir}")
 #%%
 
 if __name__ == "__main__":

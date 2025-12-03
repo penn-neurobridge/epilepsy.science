@@ -6,6 +6,7 @@ import map_pennseive_datasets as map_pennseive
 import sync_IEEGrecon
 import sync_voxtoolCT
 import sync_freesurfer
+import sync_freesurfer_deface
 import diff_pennseive_datasets as diff_pennseive
 import push_pennseive_datasets as push_pennseive
 
@@ -18,10 +19,14 @@ data_dir="/Users/nishant/Dropbox/Sinha/Lab/Research/projects/develop/infrastruct
 bids_dir="/Users/nishant/Dropbox/Sinha/Lab/Research/projects/discover/epilepsy/epi_t3_iEEG/data/BIDS"
 
 #%%
-subprocess.run(['pennsieve', 'agent'], check=True)
+# subprocess.run(['pennsieve', 'agent'], check=True)
 subprocess.run(['pennsieve', 'whoami'], check=True)
 
-id_map = pd.read_csv(Path(data_dir) / "id_map.csv")
+id_map = pd.read_csv(Path(data_dir) / "id_map_jb.csv")
+# sort by priority coloumn in desecning order
+id_map = id_map.sort_values(by='priority', ascending=True)
+# delete everything that is not priority 1
+id_map = id_map[id_map['priority'] == 1]
 
 #%%
 # make an empty dataframe to recoerd if the dataset was already processed
@@ -36,6 +41,8 @@ for index,subject in id_map.iterrows():
         sync_voxtoolCT.main(rid=subject['RID'], pennepi=subject['PennEPI'], 
             base_data_dir=data_dir, bids_data_dir=bids_dir)
         sync_freesurfer.main(rid=subject['RID'], pennepi=subject['PennEPI'], 
+            base_data_dir=data_dir, bids_data_dir=bids_dir)
+        sync_freesurfer_deface.main(rid=subject['RID'], pennepi=subject['PennEPI'], 
             base_data_dir=data_dir, bids_data_dir=bids_dir)
         diff_pennseive.main(dataset_name=subject['PennEPI'], base_data_dir=data_dir, output_csv=None)
         push_pennseive.main(dataset_name=subject['PennEPI'], base_data_dir=data_dir)

@@ -5,6 +5,7 @@ import logging
 import map_pennseive_datasets as map_pennseive
 import sync_IEEGrecon
 import sync_voxtoolCT
+import sync_CT
 import sync_freesurfer
 import sync_freesurfer_deface
 import diff_pennseive_datasets as diff_pennseive
@@ -39,6 +40,8 @@ for index,subject in id_map.iterrows():
         sync_IEEGrecon.main(rid=subject['RID'], pennepi=subject['PennEPI'], 
             base_data_dir=data_dir, bids_data_dir=bids_dir)
         sync_voxtoolCT.main(rid=subject['RID'], pennepi=subject['PennEPI'], 
+            base_data_dir=data_dir, bids_data_dir=bids_dir)
+        sync_CT.main(rid=subject['RID'], pennepi=subject['PennEPI'], 
             base_data_dir=data_dir, bids_data_dir=bids_dir)
         sync_freesurfer.main(rid=subject['RID'], pennepi=subject['PennEPI'], 
             base_data_dir=data_dir, bids_data_dir=bids_dir)

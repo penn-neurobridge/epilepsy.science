@@ -38,7 +38,11 @@ def deface_freesurfer(source_dir: Path, target_dir: Path):
             '--o', str(source_defaced_file), 
             '--threads', '16']
         log.info(f"Running mideface at source: {' '.join(cmd)}")
-        subprocess.run(cmd, check=True)
+        try:
+            subprocess.run(cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            log.error(f"Mideface failed with error: {e.stderr}")
+            return False
     
     # Now copy the defaced output to target directory
     target_derivatives_dir = target_dir / 'derivatives' / 'freesurfer' / 'mri'

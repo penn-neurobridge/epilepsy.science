@@ -45,15 +45,22 @@ def deface_freesurfer(source_dir: Path, target_dir: Path):
     target_derivatives_dir.mkdir(parents=True, exist_ok=True)
     log.info(f"Created target directory: {target_derivatives_dir}")
     
-    # Copy the defaced file to target as T1.mgz (replacing with defaced version)
+    # Define target file paths
     target_t1_file = target_derivatives_dir / 'T1.mgz'
-    shutil.copy(source_defaced_file, target_t1_file)
-    log.info(f"Copied defaced file as T1.mgz to: {target_t1_file}")
+    target_t1_nii = target_derivatives_dir / 'T1.nii.gz'
+    
+    # Only copy and convert if target files don't exist
+    if not target_t1_file.exists() or not target_t1_nii.exists():
+        # Copy the defaced file to target as T1.mgz (replacing with defaced version)
+        shutil.copy(source_defaced_file, target_t1_file)
+        log.info(f"Copied defaced file as T1.mgz to: {target_t1_file}")
 
-    # mri_convert the defaced file to nii.gz
-    cmd = ['mri_convert', str(target_t1_file), str(target_t1_file.with_suffix('.nii.gz'))]
-    log.info(f"Running mri_convert: {' '.join(cmd)}")
-    subprocess.run(cmd, check=True)
+        # mri_convert the defaced file to nii.gz
+        cmd = ['mri_convert', str(target_t1_file), str(target_t1_file.with_suffix('.nii.gz'))]
+        log.info(f"Running mri_convert: {' '.join(cmd)}")
+        subprocess.run(cmd, check=True)
+    else:
+        log.info(f"Target files already exist, skipping copy and conversion")
 
     return True
 

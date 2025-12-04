@@ -43,6 +43,8 @@ def map_dataset(dataset_id, dataset_name, base_data_dir="data", remove_existing=
         data_dir = Path(base_data_dir)
         data_dir.mkdir(exist_ok=True)
         
+
+        
         log.info(f"Mapping '{dataset_name}' to {dataset_path}")
         # Run the pennsieve map command
         result = subprocess.run([
